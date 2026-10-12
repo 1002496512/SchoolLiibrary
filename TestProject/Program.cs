@@ -8,6 +8,8 @@ using System;
 using System.Diagnostics;
 using DTOLibrary;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Xml.Linq;
 
 namespace TestProject
 {
@@ -100,7 +102,102 @@ namespace TestProject
                 }
             }
             }
+
+
+        static void Convert()
+        {
+            using System;
+            using System.Globalization;
+            using System.IO;
+            using System.Linq;
+            using System.Xml.Linq;
+
+class Program
+        {
+            static void Main(string[] args)
+            {
+                // Укажите пути к вашим файлам
+                string inputTcxPath = @"C:\SwimData\workout.tcx";
+                string outputCsvPath = @"C:\SwimData\swimming_laps.csv";
+
+                if (!File.Exists(inputTcxPath))
+                {
+                    Console.WriteLine($"Ошибка: Файл {inputTcxPath} не найден.");
+                    return;
+                }
+
+                try
+                {
+                    // Загружаем TCX как XML-документ
+                    XDocument tcxDoc = XDocument.Load(inputTcxPath);
+                    XNamespace ns = tcxDoc.Root.GetDefaultNamespace();
+
+                    // Пространство имен для расширений (где часто хранятся данные о гребках)
+                    XNamespace extensionNs = "http://garmin.com";
+
+                    // Выбираем все отрезки (Laps)
+                    var laps = tcxDoc.Descendants(ns + "Lap");
+
+                    using (StreamWriter writer = new StreamWriter(outputCsvPath, false, System.Text.Encoding.UTF8))
+                    {
+                        // Записываем заголовки столбцов в CSV
+                        writer.WriteLine("Номер бассейна,Время начала,Длительность (сек),Калории,Пульс (ср),Гребков на отрезок,Интенсивность");
+
+                        int lapCounter = 1;
+
+                        foreach (var lap in laps)
+                        {
+                            // Извлекаем базовые атрибуты и элементы отрезка
+                            string startTime = (string)lap.Attribute("StartTime") ?? "";
+                            double totalTime = (double?)lap.Element(ns + "TotalTimeSeconds") ?? 0.0;
+                            int calories = (int?)lap.Element(ns + "Calories") ?? 0;
+
+                            // Средний пульс на отрезке
+                            var avgHeartRateEl = lap.Element(ns + "AverageHeartRateBpm");
+                            int avgHeartRate = avgHeartRateEl != null ? (int?)avgHeartRateEl.Element(ns + "Value") ?? 0 : 0;
+
+                            // Извлекаем количество гребков (в TCX они часто лежат внутри Extensions)
+                            int totalStrokes = 0;
+                            var extensions = lap.Element(ns + "Extensions");
+                            if (extensions != null)
+                            {
+                                // Пытаемся найти LX (LapExtension) от Garmin или Huawei
+                                var lx = extensions.Descendants().FirstOrDefault(e => e.Name.LocalName == "LX");
+                                if (lx != null)
+                                {
+                                    totalStrokes = (int?)lx.Element(extensionNs + "Steps") ?? 0;
+                                    // В некоторых плавательных профилях Steps используется как общее число гребков на отрезок
+                                }
+                            }
+
+                            // Если структура другая, проверяем стандартный Cadence (может хранить частоту или гребки)
+                            if (totalStrokes == 0)
+                            {
+                                totalStrokes = (int?)lap.Element(ns + "Cadence") ?? 0;
+                            }
+
+                            string intensity = (string)lap.Element(ns + "Intensity") ?? "Active";
+
+                            // Записываем строку данных
+                            writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                "{0},{1},{2},{3},{4},{5},{6}",
+                                lapCounter, startTime, totalTime, calories, avgHeartRate, totalStrokes, intensity));
+
+                            lapCounter++;
+                        }
+                    }
+
+                    Console.WriteLine($"Успешно! Данные о гребках обработаны и сохранены в: {outputCsvPath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Произошла ошибка при обработке файла: {ex.Message}");
+                }
+            }
         }
+
+    }
+}
        
     }
 
