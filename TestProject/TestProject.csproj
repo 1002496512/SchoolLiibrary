@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DTOLibrary\DTOLibrary.csproj" />
+    <ProjectReference Include="..\LibraryWebService\LibraryWebService.csproj" />
   </ItemGroup>
 
 </Project>
