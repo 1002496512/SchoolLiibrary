@@ -11,6 +11,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Xml.Linq;
 using LibraryWebService.ORM;
+using System.Data;
+using LibraryWebService;
 
 namespace TestProject
 {
@@ -27,7 +29,7 @@ namespace TestProject
             Console.WriteLine("Add some water");
             Console.WriteLine("Stir your coffee");
             Console.WriteLine("Coffee drink is ready");
-}
+        }
 
         private static async Task PrepareToastAsync(int count)
         {
@@ -45,11 +47,11 @@ namespace TestProject
         private static async Task PrepareAggsAsync(int count)
         {
             Console.WriteLine("Heating a pan");
-           await  Task.Delay(1000);
+            await Task.Delay(1000);
             Console.WriteLine("Pour oil into the pan.");
             for (int i = 1; i <= count; i++)
                 Console.WriteLine("Break the egg into pan");
-            Console.WriteLine("Frying eggs") ;
+            Console.WriteLine("Frying eggs");
             await Task.Delay(7000);
             Console.WriteLine("Put eggs on a plate");
             Console.WriteLine("Fried eggs are ready");
@@ -59,9 +61,9 @@ namespace TestProject
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Console.WriteLine("Start making cofee");
-            Task cofee= PrepareCofeeAsync();
+            Task cofee = PrepareCofeeAsync();
             Console.WriteLine("Start making toasts");
-            Task toas= PrepareToastAsync(2);
+            Task toas = PrepareToastAsync(2);
             Console.WriteLine("Start making eggs");
             Task aggs = PrepareAggsAsync(2);
             await Task.WhenAll(cofee, toas, aggs);
@@ -71,8 +73,8 @@ namespace TestProject
         }
         static async Task Main(string[] args)
         {
-            TestDbContext();
-            Console.ReadLine(); 
+            TestCreateAuthor();
+            Console.ReadLine();
         }
 
         static void TestModel()
@@ -95,25 +97,48 @@ namespace TestProject
                 Console.WriteLine("The Author is correct");
             }
             else
-            { 
+            {
                 Console.WriteLine("The Author is not correct");
                 foreach (var validationResult in results)
                 {
                     Console.WriteLine($"- {validationResult.ErrorMessage}");
                 }
             }
-            }
+        }
 
         static void TestDbContext()
         {
             DbContext dbContext = new DbContext();
             dbContext.OpenConnection();
-            dbContext.ChangeData("delete from cities where cityId=1273");
+            dbContext.ChangeDb("delete from cities where cityId=1273");
             dbContext.CloseConnection();
         }
+
+
+        static void TestCreateAuthor()
+        {
+            DbContext dbContext = new DbContext();
+            dbContext.OpenConnection();
+            string sql = "select * from Authors";
+            IDataReader reader = dbContext.Select(sql);
+            List<Author> list = new List<Author>();
+            UOWModelCreators uOWModelCreators = new UOWModelCreators();
+            while (reader.Read() == true)
+            {
+                Author author = uOWModelCreators.AuthorCreator.CreateModel(reader);
+                list.Add(author);
+            }
+            dbContext.CloseConnection();
+            foreach (Author author in list)
+            {
+                Console.WriteLine($"{author.AuthorFirstName} {author.AuthorLastName}");
+
+            }
         }
 
+
     }
+}
 
        
    

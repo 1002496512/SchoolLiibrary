@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace LibraryWS
+namespace LibraryWebService
 {
     public interface IModelCreator<T>
     {

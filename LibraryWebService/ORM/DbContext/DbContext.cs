@@ -59,12 +59,9 @@ namespace DTOLibrary
             return dataReader;  
         }
 
-        public int Update(string sql)
-        {
-            return ChangeDb(sql);
-        }
+       
 
-        private int ChangeDb(string sql)
+        public int ChangeDb(string sql)
         {
             this.command.CommandText = sql;
             int records = this.command.ExecuteNonQuery();

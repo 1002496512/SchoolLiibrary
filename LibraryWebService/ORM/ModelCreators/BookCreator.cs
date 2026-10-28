@@ -1,6 +1,6 @@
 ﻿using DTOLibrary;
 using System.Data;
-namespace LibraryWS
+namespace LibraryWebService
 {
     public class BookCreator : IModelCreator<Book>
     {

@@ -12,8 +12,7 @@ namespace DTOLibrary
         int Delete(string sql);
         int Insert(string sql);
 
-        int Update(string sql);
-
+        int ChangeDb(string sql);
         IDataReader Select(string sql);
 
 

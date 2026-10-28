@@ -1,7 +1,7 @@
 ﻿using DTOLibrary;
 using System.Data;
 
-namespace LibraryWS
+namespace LibraryWebService
 {
     public class GanreCreator:IModelCreator<Ganre>
     {

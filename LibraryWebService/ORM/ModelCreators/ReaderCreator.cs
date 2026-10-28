@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibraryWS
+namespace LibraryWebService
 {
     public class ReaderCreator : IModelCreator<Reader>
     {
