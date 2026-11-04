@@ -20,14 +20,7 @@ namespace LibraryWebService
             this.uowModelCreators = uowModelCreators;
         }
 
-        public DbContext DbContext
-        {
-            get
-            {
-                return this.dbContext;
-            }
-        }
-
+  
         public AuthoRepository AuthoRepository
         {
             get
