@@ -80,5 +80,15 @@ namespace LibraryWebService
             }
         }
 
+        public BookCreator BookCreator
+        {
+            get
+            {
+                if (this.bookCreator == null)
+                    this.bookCreator = new BookCreator();
+                return this.bookCreator;
+            }
+        }
+
     }
 }

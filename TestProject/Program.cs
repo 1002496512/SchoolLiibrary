@@ -10,7 +10,7 @@ using DTOLibrary;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Xml.Linq;
-using LibraryWebService.ORM;
+using LibraryWebService;
 using System.Data;
 using LibraryWebService;
 

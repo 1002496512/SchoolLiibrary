@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.OleDb;
 
-namespace DTOLibrary
+namespace LibraryWebService
 {
     public class DbContext : IDbContext
     {

@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ORM\NewFolder\**" />
+    <Content Remove="ORM\NewFolder\**" />
+    <EmbeddedResource Remove="ORM\NewFolder\**" />
+    <None Remove="ORM\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.Data.OleDb" Version="10.0.13" />
   </ItemGroup>
