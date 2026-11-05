@@ -95,12 +95,12 @@ namespace LibraryWebService
         }
         public void Commit()
         {
-            this.DbContext.Commit();
+            this.dbContext.Commit();
         }
 
         public void Rollback()
         {
-            this.DbContext.RollBack();
+            this.dbContext.RollBack();
         }
 
        
