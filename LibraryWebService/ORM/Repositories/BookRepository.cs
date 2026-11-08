@@ -6,6 +6,12 @@ namespace LibraryWebService
 {
     public class BookRepository : Repository, IRepository<Book>
     {
+        int allBooks;
+
+        public int AllBooks
+        {
+            get { return this.allBooks; }
+        }
         public BookRepository(DbContext DbContext,
                               UOWModelCreators UOWModelCreators) :
                               base(DbContext, UOWModelCreators)
@@ -220,6 +226,15 @@ namespace LibraryWebService
                 return Convert.ToInt32(reader["BookCount"]);
             }
         }
+
+        internal List<Book> GetBokByPage(int page, int booksPerPage)
+        {
+            List<Book> books = this.GetAll();
+            this.allBooks = books.Count;
+            return books.Skip<Book>((page - 1) * booksPerPage).Take(booksPerPage).ToList<Book>();
+        }
+
+        
     }
 }
 

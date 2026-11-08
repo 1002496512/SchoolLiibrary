@@ -20,7 +20,7 @@ namespace DTOLibrary
         public string AuthorId { get; set; }
         public string GanreId { get; set; }
         public int Page { get; set; }
-        public int PagePerPage { get; set; }
+        public int BooksPerPage { get; set; }
 
         public int PageCount { get; set; }
 
