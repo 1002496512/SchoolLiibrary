@@ -230,11 +230,38 @@ namespace LibraryWebService
         internal List<Book> GetBokByPage(int page, int booksPerPage)
         {
             List<Book> books = this.GetAll();
+            return GetBooksForPage(books, page, booksPerPage);
+        }
+
+        internal List<Book> GetBooksByGanre(int page, string ganreId, int booksPerPage)
+        {
+            string sql = @$"SELECT Books.BookId, Books.BookName, Books.BookDescription,
+                            Books.BookImage, Books.BookCopies, BooksGenres.GenreId
+                            FROM Books INNER JOIN BooksGenres ON Books.BookId = BooksGenres.BookId
+                            WHERE BooksGenres.GenreId={ganreId}";
+
+            List<Book> books = GetBookList(sql);
+            return GetBooksForPage(books,page, booksPerPage);
+        }
+
+
+        private List<Book> GetBooksForPage(List<Book> books,int page, int booksPerPage)
+        {
             this.allBooks = books.Count;
             return books.Skip<Book>((page - 1) * booksPerPage).Take(booksPerPage).ToList<Book>();
         }
 
-        
+        internal List<Book> GetBooksByAuthor(int page, string authorId, int booksPerPage)
+        {
+            string sql = @$"SELECT Books.BookId, Books.BookName, Books.BookDescription,
+                            Books.BookImage, Books.BookCopies, BooksAuthors.AuthorId
+                            FROM Books INNER JOIN BooksAuthors ON Books.BookId = BooksAuthors.BookId
+                            WHERE BooksAuthors.AuthorId={authorId};
+";
+
+            List<Book> books = GetBookList(sql);
+            return GetBooksForPage(books, page, booksPerPage);
+        }
     }
 }
 

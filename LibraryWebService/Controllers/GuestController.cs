@@ -20,23 +20,34 @@ namespace LibraryWebService.Controllers
         }
 
         [HttpGet]
-        public CatalogViewModel GetCatalogViewModel(int page=0, string authorId=null, string ganreId=null)
+        public CatalogViewModel GetCatalogViewModel(int page=1, string authorId=null, string ganreId=null)
         {
             CatalogViewModel catalogViewModel = new CatalogViewModel();
-            if(page==0 && authorId==null && ganreId==null)
-            {
-                catalogViewModel.Page = 1;
-                catalogViewModel.BooksPerPage = 10;
-                catalogViewModel.Ganres = repositoryFactory.GanreRepository.GetAll();
-                catalogViewModel.Authors = repositoryFactory.AuthoRepository.GetAll();
-                catalogViewModel.Books = repositoryFactory.BookRepository.GetBokByPage(catalogViewModel.Page,catalogViewModel.BooksPerPage);
-                catalogViewModel.AuthorId = authorId;                                                                   
-                catalogViewModel.GanreId = ganreId;
-                catalogViewModel.PageCount = repositoryFactory.BookRepository.AllBooks / catalogViewModel.BooksPerPage;
-                if (repositoryFactory.BookRepository.AllBooks % catalogViewModel.BooksPerPage > 0)
-                    catalogViewModel.PageCount++;
+           
+            catalogViewModel.BooksPerPage = 10;
+            catalogViewModel.Ganres = repositoryFactory.GanreRepository.GetAll();
+            catalogViewModel.Authors = repositoryFactory.AuthoRepository.GetAll();
+            catalogViewModel.Page = page;
+            catalogViewModel.AuthorId = authorId;
+            catalogViewModel.GanreId = ganreId;
 
+            if (authorId==null && ganreId==null)
+            {
+                catalogViewModel.Books = repositoryFactory.BookRepository.GetBokByPage(catalogViewModel.Page,catalogViewModel.BooksPerPage);
             }
+            else if (authorId == null && ganreId != null)
+            {
+                catalogViewModel.Books = repositoryFactory.BookRepository.GetBooksByGanre(catalogViewModel.Page, ganreId, catalogViewModel.BooksPerPage);
+            }
+
+            else if (authorId != null && ganreId == null)
+            {
+                catalogViewModel.Books = repositoryFactory.BookRepository.GetBooksByAuthor(catalogViewModel.Page, authorId, catalogViewModel.BooksPerPage);
+            }
+            catalogViewModel.PageCount = repositoryFactory.BookRepository.AllBooks / catalogViewModel.BooksPerPage;
+
+            if (repositoryFactory.BookRepository.AllBooks % catalogViewModel.BooksPerPage > 0)
+                catalogViewModel.PageCount++;
 
 
 
