@@ -262,6 +262,11 @@ namespace LibraryWebService
             List<Book> books = GetBookList(sql);
             return GetBooksForPage(books, page, booksPerPage);
         }
+
+        internal List<Author> GetAuthorsByBook(string bookId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 
